@@ -1,28 +1,15 @@
-import os
 from pathlib import Path
-import dj_database_url
+from dotenv import load_dotenv
+import os
 
-# Base directory
+# Load environment variables from .env file
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# Secret key and debug settings
-SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key')  # Ensure to set this on Render
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
-# Allowed hosts
-ALLOWED_HOSTS = ['your-app-name.onrender.com']  # replace with your Render URL
-
-# Database configuration using dj_database_url to connect to Render’s PostgreSQL
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
-}
-
-# Static and media files settings
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+# General settings
+SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['your-app-name.onrender.com']  # Replace with your Render URL
 
 # Application definition
 INSTALLED_APPS = [
@@ -32,7 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',  # Your Django app
+    'main',  # Your app
 ]
 
 MIDDLEWARE = [
@@ -50,7 +37,7 @@ ROOT_URLCONF = 'share_food_.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,6 +52,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'share_food_.wsgi.application'
 
+# Database configuration (using environment variables)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DATABASE_NAME', 'food_sharing_db_'),
+        'USER': os.getenv('DATABASE_USER', 'food_sharing_db_2uam_user'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'vMdtlhBlq6BvV5C56OwL6SVv1nVIJKn7'),
+        'HOST': os.getenv('DATABASE_HOST', 'dpg-cskti1l6l47c73bpc2qg-a.oregon-postgres.render.com'),
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
+    }
+}
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -73,12 +72,22 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Localization settings
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+# Additional settings for deployment
+if not DEBUG:
+    # Ensures static files are collected correctly on Render
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
