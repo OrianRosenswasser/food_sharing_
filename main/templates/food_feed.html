@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<h2>Food Feed</h2>
+<ul>
+    {% for post in food_posts %}
+        <li>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.description }}</p>
+            {% if post.photo %}
+                <img src="{{ post.photo.url }}" alt="Food photo" width="100">
+            {% endif %}
+            <p>Contact: {{ post.contact_name }} - {{ post.contact_phone }}</p>
+            <a href="{% url 'request_food' post.id %}">Request Food</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<h2>Post Food</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Post Food 🍲</button>
+</form>
+{% endblock %}

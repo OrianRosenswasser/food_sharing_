@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Food Feed</h2>
+<ul>
+    {% for post in posts %}
+        <li>
+            <p>{{ post.text }}</p>
+            {% if post.photo %}
+                <img src="{{ post.photo.url }}" alt="Food photo" width="100">
+            {% endif %}
+            <p>📞 {{ post.phone_number }} | 🗓️ Expiration: {{ post.expiration_date }} | 📍 Collection Point: {{ post.collection_point }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
